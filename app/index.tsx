@@ -62,14 +62,14 @@ export default class App extends React.Component {
     if (this.state.start){
       return(
         <View style={styles.container}>
-        <Button title='hola' onPress={this.onButtonPress} />
+        <Button title='increase' onPress={this.onButtonPress} />
         <Counter />
         </View>
     )
     } else {
       return(
       <View style={styles.container}>
-      <Button title='hola' onPress={this.onButtonPress} />
+      <Button title='increase' onPress={this.onButtonPress} />
       </View>
       )
     }
