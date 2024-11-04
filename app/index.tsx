@@ -1,6 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
-import Countdown from '/components/Countdown.js';
+import Countdown from '../components/Countdown';
+
 
 class Counter extends React.Component {
   constructor(props){
@@ -24,7 +25,7 @@ class Counter extends React.Component {
 
   increaseNum = () => {
       if (this.state.count > 0) {
-        this.setState(prevState => ({count: prevState.count - 1 }))
+        this.setState(prevState => ({totalTime: prevState.totalTime - 1 }))
         } 
       else if (this.state.pomodoro) { 
         this.setState(prevState => ({count: 5, pomodoro: !prevState.pomodoro}))
@@ -38,7 +39,7 @@ class Counter extends React.Component {
   render() {
     return (
       <View style={styles.container}>
-        <Countdown totalTime={this.totalTime} />
+        <Countdown totalTime={this.state.totalTime} />
       </View>
     );
   }
