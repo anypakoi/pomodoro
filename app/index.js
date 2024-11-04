@@ -2,38 +2,37 @@ import React from 'react';
 import { StyleSheet, Text, View, Button } from 'react-native';
 import Countdown from '../components/Countdown';
 
-
 class Counter extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props)
     this.state = {
       count: 25,
       totalTime: 25 * 60,
       pomodoro: true,
     };
+    this.interval = null;
   }
 
-  
-
-  componentDidMount(){
-      this.interval = setInterval(this.increaseNum, 1000)
+  componentDidMount() {
+    this.interval = setInterval(this.increaseNum, 1000)
   }
 
   componentWillUnmount() {
-    clearInterval(this.interval)
+    if (this.interval) {
+      clearInterval(this.interval)
+    }
   }
 
   increaseNum = () => {
-      if (this.state.count > 0) {
-        this.setState(prevState => ({totalTime: prevState.totalTime - 1 }))
-        } 
-      else if (this.state.pomodoro) { 
-        this.setState(prevState => ({count: 5, pomodoro: !prevState.pomodoro}))
-        }
-      else {
-        this.setState(prevState => ({count: 10, pomodoro: !prevState.pomodoro}))
-      }
-    
+    if (this.state.count > 0) {
+      this.setState(prevState => ({totalTime: prevState.totalTime - 1 }))
+    } 
+    else if (this.state.pomodoro) { 
+      this.setState(prevState => ({count: 5, pomodoro: !prevState.pomodoro}))
+    }
+    else {
+      this.setState(prevState => ({count: 10, pomodoro: !prevState.pomodoro}))
+    }
   };
 
   render() {
@@ -54,23 +53,22 @@ export default class App extends React.Component {
   }
 
   onButtonPress = () => {
-    this.setState(prevState => ({start: !prevState.start,}))
+    this.setState(prevState => ({start: !prevState.start}))
   };
 
-  
-  render () {
-    if (this.state.start){
-      return(
+  render() {
+    if (this.state.start) {
+      return (
         <View style={styles.container}>
-        <Button title='increase' onPress={this.onButtonPress} />
-        <Counter />
+          <Button title='increase' onPress={this.onButtonPress} />
+          <Counter />
         </View>
-    )
+      )
     } else {
-      return(
-      <View style={styles.container}>
-      <Button title='increase' onPress={this.onButtonPress} />
-      </View>
+      return (
+        <View style={styles.container}>
+          <Button title='increase' onPress={this.onButtonPress} />
+        </View>
       )
     }
   }
@@ -83,4 +81,4 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-});
+}); 
