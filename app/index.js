@@ -9,7 +9,8 @@ class Counter extends React.Component {
     this.state = {
       totalTime: (props.workTime || 25) * 60,
       pomodoro: true,
-      playAlarm: false
+      playAlarm: false,
+      cycle: 0,
     };
     this.interval = null;
   }
@@ -35,16 +36,11 @@ class Counter extends React.Component {
         this.setState({playAlarm: true})
       }
     } 
-    else if (this.state.pomodoro) { 
-      this.setState(prevState => ({
-        totalTime: this.props.breakTime * 60,
-        pomodoro: !prevState.pomodoro,
-      }))
-    }
     else {
       this.setState(prevState => ({
-        totalTime: this.props.workTime * 60,
+        totalTime: this.state.pomodoro ? this.props.breakTime * 60 : this.props.workTime * 60,
         pomodoro: !prevState.pomodoro,
+        cycle: prevState.cycle + 1,
       }))
     }
   };
@@ -77,7 +73,7 @@ export default class App extends React.Component {
     if (this.state.start) {
       return (
         <View style={styles.container}>
-          <Button title='increase' onPress={this.onButtonPress} />
+          <Button title='stop' onPress={this.onButtonPress} />
           <Counter workTime={parseInt(this.state.workTime)} breakTime={parseInt(this.state.breakTime)} />
         </View>
       )
@@ -102,7 +98,7 @@ export default class App extends React.Component {
               onChangeText={(text) => this.setState({breakTime: text})}
             />
           </View>
-          <Button title='increase' onPress={this.onButtonPress} />
+          <Button title='start' onPress={this.onButtonPress} />
         </View>
       )
     }
