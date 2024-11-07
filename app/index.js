@@ -1,20 +1,22 @@
 import React from 'react';
-import { StyleSheet, Text, View, Button } from 'react-native';
+import { StyleSheet, Text, View, Button, TextInput } from 'react-native';
 import Countdown from '../components/Countdown';
+import Alarm from '../components/Alarm';
 
 class Counter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      count: 25,
-      totalTime: 25 * 60,
+      totalTime: (props.workTime || 25) * 60,
       pomodoro: true,
+      playAlarm: false
     };
     this.interval = null;
   }
 
   componentDidMount() {
     this.interval = setInterval(this.increaseNum, 1000)
+    
   }
 
   componentWillUnmount() {
@@ -24,14 +26,26 @@ class Counter extends React.Component {
   }
 
   increaseNum = () => {
-    if (this.state.count > 0) {
-      this.setState(prevState => ({totalTime: prevState.totalTime - 1 }))
+    if (this.state.totalTime > 0) {
+      this.setState(prevState => ({
+        totalTime: prevState.totalTime - 1,
+        playAlarm: false
+      }))
+      if (this.state.totalTime === 3) {
+        this.setState({playAlarm: true})
+      }
     } 
     else if (this.state.pomodoro) { 
-      this.setState(prevState => ({count: 5, pomodoro: !prevState.pomodoro}))
+      this.setState(prevState => ({
+        totalTime: this.props.breakTime * 60,
+        pomodoro: !prevState.pomodoro,
+      }))
     }
     else {
-      this.setState(prevState => ({count: 10, pomodoro: !prevState.pomodoro}))
+      this.setState(prevState => ({
+        totalTime: this.props.workTime * 60,
+        pomodoro: !prevState.pomodoro,
+      }))
     }
   };
 
@@ -39,6 +53,7 @@ class Counter extends React.Component {
     return (
       <View style={styles.container}>
         <Countdown totalTime={this.state.totalTime} />
+        <Alarm shouldPlay={this.state.playAlarm} />
       </View>
     );
   }
@@ -48,7 +63,9 @@ export default class App extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      start: false
+      start: false,
+      workTime: '25',
+      breakTime: '5'
     }
   }
 
@@ -61,12 +78,30 @@ export default class App extends React.Component {
       return (
         <View style={styles.container}>
           <Button title='increase' onPress={this.onButtonPress} />
-          <Counter />
+          <Counter workTime={parseInt(this.state.workTime)} breakTime={parseInt(this.state.breakTime)} />
         </View>
       )
     } else {
       return (
         <View style={styles.container}>
+          <View style={styles.inputContainer}>
+            <Text>Tiempo de trabajo (minutos):</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={this.state.workTime}
+              onChangeText={(text) => this.setState({workTime: text})}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text>Tiempo de descanso (minutos):</Text>
+            <TextInput
+              style={styles.input}
+              keyboardType="numeric"
+              value={this.state.breakTime}
+              onChangeText={(text) => this.setState({breakTime: text})}
+            />
+          </View>
           <Button title='increase' onPress={this.onButtonPress} />
         </View>
       )
@@ -80,5 +115,18 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     alignItems: 'center',
     justifyContent: 'center',
+  },
+  inputContainer: {
+    marginBottom: 20,
+    alignItems: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#ccc',
+    padding: 10,
+    width: 100,
+    textAlign: 'center',
+    marginTop: 5,
+    borderRadius: 5,
   },
 }); 
