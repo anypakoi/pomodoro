@@ -8,10 +8,10 @@ class Counter extends React.Component {
   constructor(props) {
     super(props)
     this.state = {
-      totalTime: (props.workTime || 25) * 60,
+      totalTime: (props.workTime || 30),
       pomodoro: true,
       playAlarm: false,
-      cycle: 4,
+      cycle: 1,
     };
     this.interval = null;
   }
@@ -40,7 +40,7 @@ class Counter extends React.Component {
     else {
       this.setState(prevState => ({
         
-        totalTime: this.state.pomodoro ? (this.state.cycle % 4 === 0 ? this.props.breakTime * this.props.timeCycle * 60 : this.props.breakTime * 60) : this.props.workTime * 60,
+        totalTime: this.state.pomodoro ? (this.state.cycle % 4 === 0 ? this.props.breakTime * this.props.timeCycle : this.props.breakTime) : this.props.workTime,
         pomodoro: !prevState.pomodoro,
         cycle: prevState.cycle + 1,
       }))
@@ -62,8 +62,8 @@ export default class App extends React.Component {
     super(props)
     this.state = {
       start: false,
-      workTime: '25',
-      breakTime: '5',
+      workTime: '30',
+      breakTime: '30',
       timeCycle: '3',
     }
   }
